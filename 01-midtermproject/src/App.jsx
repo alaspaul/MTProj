@@ -2,21 +2,26 @@ import { useState } from 'react'
 
 import './App.css'
 
-function addToList(){
 
-}
 
 
 
 function App() {
   const[items, setItems] = useState([]);
   const[grocery, setgrocery] = useState("items");
+
   const addItemtoList = () => {
     if(!items.find((item) => item.name === grocery)){
       setItems([...items, {id: items.length, name:grocery}]);
     }else{
       alert('item is already in the list');
     }
+  }
+
+  const removeItemfromList = (name) => {
+    setItems((current) =>
+      current.filter((items) => items.name !== name)
+    );
   }
 
   return (
@@ -31,7 +36,18 @@ function App() {
           <button onClick={() => addItemtoList()}>Add</button>
         </div>
         <div className='table'>
-          <ul>{items.map((item) => (<li key={item.id}>{item.name}<button>Edit</button><button>remove</button></li>))}</ul>
+          <ul>{items.map((item) => (<li key={item.id}>{item.name}
+
+          <div className='buttons'>   
+
+            <button className='editButton'>Edit</button>
+
+            <button className='removeButton' onClick={() => removeItemfromList(item.name)}>remove</button> 
+
+          </div>
+     
+          
+          </li>))}</ul>
         </div>
         
         

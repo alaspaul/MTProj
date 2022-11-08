@@ -24,6 +24,9 @@ function App() {
     );
   }
 
+ 
+  
+
   return (
     <main>
       <div className='Body'>
@@ -36,15 +39,13 @@ function App() {
           <button onClick={() => addItemtoList()}>Add</button>
         </div>
         <div className='table'>
-          <ul>{items.map((item) => (<li key={item.id}>{item.name}
-
-          <div className='buttons'>   
-
+          <ul className='list'>{items.map((item) => (<li key={item.id}>{item.name}
+         
             <button className='editButton'>Edit</button>
 
             <button className='removeButton' onClick={() => removeItemfromList(item.name)}>remove</button> 
-
-          </div>
+       
+    
      
           
           </li>))}</ul>

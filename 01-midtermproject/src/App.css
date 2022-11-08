@@ -1,6 +1,12 @@
 .Body{
 display: flex;
 flex-direction: column;
+justify-content: center;
+align-items: center;
+border: 2px solid #F2D1D1;
+  border-radius: 5px;
+  background-color:  #F2D1D1;
+  width: 450px;
 }
 
 

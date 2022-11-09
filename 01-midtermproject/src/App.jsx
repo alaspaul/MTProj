@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, fragment } from 'react';
 
-import {nanoid} from 'nanoid'
-import './App.css'
-import Data from './Grocery-Data.json'
-
-
+import {nanoid} from 'nanoid';
+import './App.css';
+import Data from './Grocery-Data.json';
+import ReadOnlyRow from './component/ReadOnlyRow.jsx';
+import EditRow from './component/EditRow.jsx';
 
 
 function App() {
@@ -15,13 +15,17 @@ const[addFormData, setAddFormData] = useState({
   item:''
 });
 
+const [editFormData, setEditFormData] = useState({
+  item:''
+});
+
 const [editItemId, setEditItemId] = useState(null);
 
 
 const addItem =(event) => {
   event.preventDefault();
 
-  const fieldName = event.target.getAttribute('name');
+  const fieldName = event.target.getAttribute("name");
   const fieldValue = event.target.value;
 
   const newFormData = { ...addFormData};
@@ -32,7 +36,25 @@ const addItem =(event) => {
 }
 
 
-  const addList = (event) => {
+
+const editItem = (event) => {
+  event.preventDefault();
+
+  const fieldName = event.target.getAttribute("name");
+  const fieldValue = event.target.value;
+
+  const newFormData = { ...editFormData};
+
+  newFormData[fieldName] = fieldValue;
+
+  setEditFormData(newFormData);
+
+
+}
+
+
+
+  const addFormSubmit = (event) => {
     event.preventDefault();
 
     const newList ={
@@ -45,42 +67,71 @@ const addItem =(event) => {
     setList(newLists);
   }
  
+  const editFormSubmit = (event) =>{
+    event.preventDefault();
+
+    const editedList ={
+      id: editItemId,
+      item: editFormData.item
+    }
+
+
+    const newLists = [...list];
+
+    const index = list.findIndex((list) => list.id === editItemId);
+
+    newLists[index] = editedList;
+
+    setList(newLists);
+    setEditItemId(null);
+  } 
+
+
     const editList = (event, list) =>{
       event.preventDefault();
 
       setEditItemId(list.id);
+
+
+
+      const formValues = {
+        item: list.item
+      }
+
+
+      setEditFormData(formValues);
     }
+  
+
   
 
   return (
     <main>
-      <div className='App-container'>
-    
-        <table>
-          <thead>
-            <tr>
-              <th>
-                Grocery Bud
-                <form onSubmit={addList}>
-            <input type="text" name="item" required="required" placeholder="e.g. eggs" onChange={addItem} />
 
+
+      <div className='App-container'>
+
+      <h1>Grocery Bud</h1>
+                <form onSubmit={addFormSubmit}>
+            <input type="text" name="item" required="required" placeholder="e.g. eggs" onChange={addItem} />
            <button type="submit">Add</button>
-          </form>
-              </th>
-            </tr>
-          </thead>
+           </form>
+
+
+    <form onSubmit={editFormSubmit}>
+        <table>
           
-          <tbody>
+          
+          
+          <tbody className='tbody'>
 
             {list.map((list) =>( 
-              <tr>
-                <td>
-                 {list.item}
-                </td>
-                <td>
-                  <button type="button" onClick={(event)=> editList(event, list)}>edit</button>
-                </td>
-              </tr>
+              <fragment> 
+          
+                {editItemId === list.id ? (<EditRow editFormData = {editFormData} editItem = {editItem}/>):(  <ReadOnlyRow list = {list} editList = {editList} /> )}
+
+              </fragment>
+             
                 ))}
            
 
@@ -90,7 +141,7 @@ const addItem =(event) => {
 
 
         </table>
-        
+        </form>
         
 
 

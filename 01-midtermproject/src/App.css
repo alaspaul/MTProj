@@ -17,8 +17,21 @@ border: 2px solid #F2D1D1;
   justify-content: flex-start;
   align-items: flex-start;
 
+
+
+  
 }
 
+.App-container{
+display:flex;
+flex-direction: column;
+}
+
+
+.tbody{
+  display:flex;
+flex-direction: column;
+}
 
 
 

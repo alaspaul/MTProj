@@ -18,17 +18,25 @@ const[list, setList] = useState(Data);
       <div className='App-container'>
         <table>
           <thead>
+            <tr>
               <th>
                 Grocery Bud
               </th>
-
-
-
+            </tr>
           </thead>
+          <form>
+            <input type="text" name="item" required="required" placeholder="e.g. eggs">
+
+            </input>
+          </form>
           <tbody>
-            {list.map((list) =>( <td>
+
+            {list.map((list) =>( 
+              <tr>
+                <td>
                  {list.item}
                 </td>
+              </tr>
                 ))}
            
 

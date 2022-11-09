@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import './App.css'
-
+import Data from './Grocery-Data.json'
 
 
 
@@ -9,7 +9,7 @@ import './App.css'
 function App() {
 
   
-
+const[list, setList] = useState(Data);
  
   
 
@@ -26,10 +26,12 @@ function App() {
 
           </thead>
           <tbody>
-              <td>
-                data
-              </td>
-              
+            {list.map((list) =>( <td>
+                 {list.item}
+                </td>
+                ))}
+           
+
           </tbody>
 
 

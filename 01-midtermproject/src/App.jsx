@@ -56,7 +56,7 @@ const editItem = (event) => {
 
   const addFormSubmit = (event) => {
     event.preventDefault();
-
+    
     const newList ={
       id: nanoid(),
       item: addFormData.item

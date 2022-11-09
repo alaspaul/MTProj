@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const readOnlyRow = ({list, editList}) =>{
+const readOnlyRow = ({list, editList, deleteItem}) =>{
 
     return (
             <tr>
@@ -9,8 +9,10 @@ const readOnlyRow = ({list, editList}) =>{
                  {list.item}
                 </td>
                 <td>
-                  <button type="button" onClick={(event) => editList(event, list)}>edit</button>
+                <button type="button" onClick={(event) => editList(event, list)}>edit</button>
+                <button type="button" onClick={() => deleteItem(list.id)}>delete</button>
                 </td>
+               
               </tr>
       )
 }

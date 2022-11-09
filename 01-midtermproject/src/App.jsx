@@ -103,7 +103,19 @@ const editItem = (event) => {
     }
   
 
-  
+  const cancelEdit = () => {
+    setEditItemId(null);
+  }
+
+
+  const deleteItem = (listId) => {
+    const newLists = [...list];
+
+    const index = list.findIndex((list)=> list.id === listId);
+
+    newLists.splice(index, 1);
+    setList(newLists);
+  }
 
   return (
     <main>
@@ -126,9 +138,18 @@ const editItem = (event) => {
           <tbody className='tbody'>
 
             {list.map((list) =>( 
-              <fragment> 
-          
-                {editItemId === list.id ? (<EditRow editFormData = {editFormData} editItem = {editItem}/>):(  <ReadOnlyRow list = {list} editList = {editList} /> )}
+              <fragment className="frags"> 
+                
+                {editItemId === list.id ? 
+                (<EditRow 
+                editFormData = {editFormData} 
+                editItem = {editItem} 
+                cancelEdit = {cancelEdit}/>
+                ):
+                ( <ReadOnlyRow 
+                list = {list} 
+                editList = {editList} 
+                deleteItem = {deleteItem} /> )}
 
               </fragment>
              

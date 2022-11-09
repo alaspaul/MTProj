@@ -8,7 +8,7 @@ import './App.css'
 
 function App() {
   const[items, setItems] = useState([]);
-  const[grocery, setgrocery] = useState("items");
+  const[grocery, setgrocery] = useState("Groceries");
 
   const addItemtoList = () => {
     if(!items.find((item) => item.name === grocery)){
@@ -40,14 +40,11 @@ function App() {
         </div>
         <div className='table'>
           <ul className='list'>{items.map((item) => (<li key={item.id}>{item.name}
-         
+            
             <button className='editButton'>Edit</button>
 
             <button className='removeButton' onClick={() => removeItemfromList(item.name)}>remove</button> 
-       
-    
-     
-          
+            
           </li>))}</ul>
         </div>
         

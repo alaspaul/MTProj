@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
-import Alert from './Alert.jsx'
-import List from './List.jsx'
+import Alert from './component/Alert.jsx'
+import List from './component/List.jsx'
 
 
 function App() {
@@ -16,25 +16,39 @@ function App() {
 
   const buttonSubmit = (event) => {
     event.preventDefault();
-    console.log('submit');
+    if(!item){
+      // display alert
+    }
+    else if(item && isEditable){
+      // deal with edit
+    }
+    else{
+      // show alert
+      const newItem = {id: new Date().getTime().toString(), 
+        title:item};
+
+        setList([ ...List, newItem]);
+        setItem('');
+
+    }
   }
 
-  return <main className="Main">
+  return <div className="mainContainer">
       <form className="listForm" onSubmit={buttonSubmit}>
         {alert.display && <Alert />} {/* if display is true then it prints an alert */}
         <h3>Grocery Bud</h3>
         <div className="formInput">
-            <input type="text"/>
+            <input type="text" className="itemText" placeholder="e.g. eggs" value={item} onChange={(e)=> setItem(e.target.value)}/>
             <button type="submit" className="submitBut">{isEditable ? 'Edit' : 'Submit'}</button>
         </div>
       </form>
       <div className="listContainer">
-          <List />
+         <List itemList={list}/>
           <button className="clearBut">Clear</button>
       </div>
 
 
-  </main>
+  </div>
 
 
 

@@ -1,179 +1,95 @@
-import { useState, fragment } from 'react';
-
-import {nanoid} from 'nanoid';
-import './App.css';
-import Data from './Grocery-Data.json';
-import ReadOnlyRow from './component/ReadOnlyRow.jsx';
-import EditRow from './component/EditRow.jsx';
-
-
+import React, { useState, useEffect } from 'react';
+import List from './List';
+import Alert from './Alert';
+const getLocalStorage = () => {
+  let list = localStorage.getItem('list');
+  if (list) {
+    return (list = JSON.parse(localStorage.getItem('list')));
+  } else {
+    return [];
+  }
+};
 function App() {
+  const [name, setName] = useState('');
+  const [list, setList] = useState(getLocalStorage());
+  const [isEditing, setIsEditing] = useState(false);
+  const [editID, setEditID] = useState(null);
+  const [alert, setAlert] = useState({ show: false, msg: '', type: '' });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name) {
+      showAlert(true, 'danger', 'please enter value');
+    } else if (name && isEditing) {
+      setList(
+        list.map((item) => {
+          if (item.id === editID) {
+            return { ...item, title: name };
+          }
+          return item;
+        })
+      );
+      setName('');
+      setEditID(null);
+      setIsEditing(false);
+      showAlert(true, 'success', 'value changed');
+    } else {
+      showAlert(true, 'success', 'item added to the list');
+      const newItem = { id: new Date().getTime().toString(), title: name };
 
-  
-const[list, setList] = useState(Data);
-const[addFormData, setAddFormData] = useState({
-  item:''
-});
-
-const [editFormData, setEditFormData] = useState({
-  item:''
-});
-
-const [editItemId, setEditItemId] = useState(null);
-
-
-const addItem =(event) => {
-  event.preventDefault();
-
-  const fieldName = event.target.getAttribute("name");
-  const fieldValue = event.target.value;
-
-  const newFormData = { ...addFormData};
-
-  newFormData[fieldName] = fieldValue;
-
-  setAddFormData(newFormData);
-}
-
-
-
-const editItem = (event) => {
-  event.preventDefault();
-
-  const fieldName = event.target.getAttribute("name");
-  const fieldValue = event.target.value;
-
-  const newFormData = { ...editFormData};
-
-  newFormData[fieldName] = fieldValue;
-
-  setEditFormData(newFormData);
-
-
-}
-
-
-
-  const addFormSubmit = (event) => {
-    event.preventDefault();
-    
-    const newList ={
-      id: nanoid(),
-      item: addFormData.item
+      setList([...list, newItem]);
+      setName('');
     }
+  };
 
-
-    const newLists = [...list, newList];
-    setList(newLists);
-  }
- 
-  const editFormSubmit = (event) =>{
-    event.preventDefault();
-
-    const editedList ={
-      id: editItemId,
-      item: editFormData.item
-    }
-
-
-    const newLists = [...list];
-
-    const index = list.findIndex((list) => list.id === editItemId);
-
-    newLists[index] = editedList;
-
-    setList(newLists);
-    setEditItemId(null);
-  } 
-
-
-    const editList = (event, list) =>{
-      event.preventDefault();
-
-      setEditItemId(list.id);
-
-
-
-      const formValues = {
-        item: list.item
-      }
-
-
-      setEditFormData(formValues);
-    }
-  
-
-  const cancelEdit = () => {
-    setEditItemId(null);
-  }
-
-
-  const deleteItem = (listId) => {
-    const newLists = [...list];
-
-    const index = list.findIndex((list)=> list.id === listId);
-
-    newLists.splice(index, 1);
-    setList(newLists);
-  }
-
+  const showAlert = (show = false, type = '', msg = '') => {
+    setAlert({ show, type, msg });
+  };
+  const clearList = () => {
+    showAlert(true, 'danger', 'empty list');
+    setList([]);
+  };
+  const removeItem = (id) => {
+    showAlert(true, 'danger', 'item removed');
+    setList(list.filter((item) => item.id !== id));
+  };
+  const editItem = (id) => {
+    const specificItem = list.find((item) => item.id === id);
+    setIsEditing(true);
+    setEditID(id);
+    setName(specificItem.title);
+  };
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(list));
+  }, [list]);
   return (
-    <main>
+    <section className='section-center'>
+      <form className='grocery-form' onSubmit={handleSubmit}>
+        {alert.show && <Alert {...alert} removeAlert={showAlert} list={list} />}
 
-
-      <div className='App-container'>
-
-      <h1>Grocery Bud</h1>
-                <form onSubmit={addFormSubmit}>
-            <input type="text" name="item" required="required" placeholder="e.g. eggs" onChange={addItem} />
-           <button type="submit">Add</button>
-           </form>
-
-
-    <form onSubmit={editFormSubmit}>
-        <table>
-          
-          
-          
-          <tbody className='tbody'>
-
-            {list.map((list) =>( 
-              <fragment className="frags"> 
-                
-                {editItemId === list.id ? 
-                (<EditRow 
-                editFormData = {editFormData} 
-                editItem = {editItem} 
-                cancelEdit = {cancelEdit}/>
-                ):
-                ( <ReadOnlyRow 
-                list = {list} 
-                editList = {editList} 
-                deleteItem = {deleteItem} /> )}
-
-              </fragment>
-             
-                ))}
-           
-
-          </tbody>
-
-
-
-
-        </table>
-        </form>
-        
-
-
-
-
-
-
-        </div>  
-
-    </main>
-  )
+        <h3>grocery bud</h3>
+        <div className='form-control'>
+          <input
+            type='text'
+            className='grocery'
+            placeholder='e.g. eggs'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <button type='submit' className='submit-btn'>
+            {isEditing ? 'edit' : 'submit'}
+          </button>
+        </div>
+      </form>
+      {list.length > 0 && (
+        <div className='grocery-container'>
+          <List items={list} removeItem={removeItem} editItem={editItem} />
+          <button className='clear-btn' onClick={clearList}>
+            clear items
+          </button>
+        </div>
+      )}
+    </section>
+  );
 }
 
-export default App
+export default App;

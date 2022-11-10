@@ -1,10 +1,11 @@
-import React from "react";
-import { FaEdit, FaTrash } from 'react-icons/fa'
+import React from 'react'
 
 const List = () => {
     return
-    <h2>List Component</h2>
-
+    <main>    
+        <h2>List Component</h2> 
+    </main>
+ 
 
 }
 
